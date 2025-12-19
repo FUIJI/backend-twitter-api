@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+    container_name: backend-twitter-api
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DEBUG=${DEBUG:-False}
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+    volumes:
+      - ./app:/app/app
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - twitter-net
+
+networks:
+  twitter-net:
+    driver: bridge
